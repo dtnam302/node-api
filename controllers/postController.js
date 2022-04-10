@@ -8,7 +8,15 @@ const postController = {
     createPost: async (req,res) => {
         try {
 
-            
+            //do something with
+
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+    findPost: async (req, res) => {
+        try {
 
         } catch (err) {
             res.status(500).json(err);
