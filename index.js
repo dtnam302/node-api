@@ -31,24 +31,24 @@ app.use("/v1/3dview/auth", authRoute);
 app.use("/v1/3dview/post", postRoute);
 
 // Catch 404 Errors and forward them to error handler
-app.use((req, res, next) => {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
-});
+// app.use((req, res, next) => {
+//   const err = new Error("Not Found");
+//   err.status = 404;
+//   next(err);
+// });
 
-// Error handler function
-app.use((err, req, res, next) => {
-  const error = app.get("env") === "development" ? err : {};
-  const status = err.status || 500;
+// // Error handler function
+// app.use((err, req, res, next) => {
+//   const error = app.get("env") === "development" ? err : {};
+//   const status = err.status || 500;
 
-  // response to client
-  return res.status(status).json({
-    error: {
-      message: error.message,
-    },
-  });
-});
+//   // response to client
+//   return res.status(status).json({
+//     error: {
+//       message: error.message,
+//     },
+//   });
+// });
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running");
