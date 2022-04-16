@@ -4,49 +4,53 @@ const postSchema = new mongoose.Schema(
   {
     area: {
       type: Number,
-      require: true
+      require: true,
     },
     price: {
       type: Number,
-      require: true
+      require: true,
     },
     desc: {
-      type: String
+      type: String,
     },
     address: {
       type: String,
-      required:true
+      required: true,
     },
-    province:{
+    province: {
       id: {
-        type:Number,
-        required:true
+        type: Number,
+        required: true,
       },
       name: {
-        type:String
-      }
+        type: String,
+      },
     },
-    district:{
+    district: {
       id: {
-        type:Number,
-        required:true
+        type: Number,
+        required: true,
       },
       name: {
-        type:String
+        type: String,
       },
-      provinceId: province.id
+      provinceId: {
+        type: Number,
+      },
     },
-    ward:{
+    ward: {
       code: {
-        type:Number,
-        required:true
+        type: Number,
+        required: true,
       },
       name: {
-        type:String
+        type: String,
       },
-      districtId: district.id
+      districtId: {
+        type: Number,
+      },
     },
-    isNew: {
+    isUsed: {
       type: Boolean,
       default: false,
     },
@@ -58,13 +62,15 @@ const postSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    rooms: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref:'rooms'
-    }],
+    rooms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "rooms",
+      },
+    ],
     creatorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:'users'
+      ref: "users",
     },
   },
   { timestamps: true }

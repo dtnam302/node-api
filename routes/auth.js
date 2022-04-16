@@ -1,6 +1,6 @@
 const authController = require("../controllers/authController");
 
-const router = require("express").Router();
+const router = require("express-promise-router")();
 const { verifyToken } = require("../controllers/verifyToken");
 
 //REGISTER
