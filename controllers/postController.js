@@ -65,14 +65,61 @@ const postController = {
     return res.status(200).json({ room: room });
   },
 
-  //GET ALL USER
-  getAllPosts: async (req, res) => {
-    try {
-      const user = await Post.find();
-      res.status(200).json(user);
-    } catch (err) {
-      res.status(500).json(err);
+  //GET ALL POSTS
+  getAllPosts: async (req, res, next) => {
+    body = req.body;
+
+    let perPage = body.perPage || 10;
+    let skipCount = body.skipCount || 0;
+
+    Post.find()
+      .skip(skipCount)
+      .limit(perPage)
+      .exec((err, posts) => {
+        Post.countDocuments((err, count) => {
+          return res.status(200).json({ Posts: posts, Count: count });
+        });
+      });
+  },
+
+  updatePost: async (req, res, next) => {
+    const { postID } = req.params;
+    const updateObject = req.body;
+    await Post.updateOne({ _id: postID }, { $set: updateObject })
+      .exec()
+      .then(() => {
+        res.status(200).json({
+          updatePost: updateObject,
+        });
+      });
+  },
+
+  deletePost: async (req, res, next) => {
+    const { postID } = req.params;
+    await Post.deleteOne({ _id: postID })
+      .exec()
+      .then((deletedCount) => {
+        let a = deletedCount.deletedCount;
+        return res.status(200).json({
+          message: `${a} post success delete`,
+        });
+      });
+  },
+
+  delelePosts: async (req, res, next) => {
+    let toDelete = [];
+    for (const ele in req.body) {
+      toDelete.push(req.body[ele]);
     }
+    const filter = { $in: toDelete };
+    await Post.deleteMany({ _id: filter })
+      .exec()
+      .then((deletedCount) => {
+        let a = deletedCount.deletedCount;
+        return res.status(200).json({
+          message: `${a} post success delete`,
+        });
+      });
   },
 };
 

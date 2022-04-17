@@ -28,4 +28,24 @@ router.post(
   postControllers.createThumbnail
 );
 
+//GET ALL POST
+router.get("/", postControllers.getAllPosts);
+
+//UPDATE A POST
+router.put("/:postID", verifyToken, postControllers.updatePost);
+
+//DELETE ONE
+router.delete(
+  "/:postID",
+  verifyTokenAndUserAuthorization,
+  postControllers.deletePost
+);
+
+//DELETE MANY
+router.delete(
+  "/",
+  verifyTokenAndUserAuthorization,
+  postControllers.delelePosts
+);
+
 module.exports = router;

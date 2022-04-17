@@ -2,23 +2,29 @@ const User = require("../models/User");
 
 const userController = {
   //GET ALL USER
-  getAllUsers: async (req, res) => {
-    try {
-      const user = await User.find();
-      res.status(200).json(user);
-    } catch (err) {
-      res.status(500).json(err);
-    }
+  updateUser: async (req, res, next) => {
+    const { userID } = req.params;
+    const updateObject = req.body;
+    await User.updateOne({ _id: userID }, { $set: updateObject })
+      .exec()
+      .then(() => {
+        res.status(200).json({
+          updateUser: updateObject,
+        });
+      });
   },
 
   //DELETE A USER
-  deleteUser: async (req, res) => {
-    try {
-      await User.findByIdAndDelete(req.params.id);
-      res.status(200).json("User deleted");
-    } catch (err) {
-      res.status(500).json(err);
-    }
+  deleteUser: async (req, res, next) => {
+    const { userID } = req.params;
+    await User.deleteOne({ _id: userID })
+      .exec()
+      .then((deletedCount) => {
+        let a = deletedCount.deletedCount;
+        return res.status(200).json({
+          message: `${a} user success delete`,
+        });
+      });
   },
 };
 

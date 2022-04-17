@@ -4,8 +4,8 @@ const uploadImage = async (files, folder) => {
   const uploader = async (path, originalname) =>
     await cloudinary.uploader.upload(path, {
       folder: `Thesis/${folder}`,
-      //use_filename: true,
-      //public_id: originalname,
+      use_filename: true,
+      public_id: originalname,
     });
 
   const urls = [];
