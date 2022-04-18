@@ -21,10 +21,15 @@ const userSchema = new mongoose.Schema(
       min: 6,
     },
     isAdmin: {
-      type:Boolean,
-      default: false
-    }
-  
+      type: Boolean,
+      default: false,
+    },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   { timestamps: true }
 );

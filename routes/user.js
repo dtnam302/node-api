@@ -5,11 +5,15 @@ const {
   verifyTokenAndUserAuthorization,
 } = require("../controllers/verifyToken");
 
-const router = require("express").Router();
+const router = require("express-promise-router")();
 //GET ALL USERS
-router.get("/", verifyToken, userController.getAllUsers);
+router.put(
+  "/:userID",
+  verifyTokenAndUserAuthorization,
+  userController.updateUser
+);
 
 //DELETE USER
-router.delete("/:id", verifyTokenAndUserAuthorization, userController.deleteUser);
+router.delete("/:userID", verifyTokenAndAdmin, userController.deleteUser);
 
 module.exports = router;
