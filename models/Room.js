@@ -6,7 +6,7 @@ const roomSchema = new mongoose.Schema({
   },
   postId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "posts",
+    ref: "Post",
   },
   imgUrl: {
     type: String,
@@ -16,14 +16,12 @@ const roomSchema = new mongoose.Schema({
     type: String,
   },
   thumbnail: {
-    type: String,
-    default:
-      "https://img.wallpapersafari.com/desktop/1920/1080/69/77/O0l57q.jpg",
+    type: String
   },
   hotspots: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "hotspots",
+      ref: "Hotspot",
     },
   ],
 });

@@ -30,6 +30,8 @@ const postController = {
     const folder = postID;
     const post = await Post.findById(postID);
 
+    console.log(files);
+
     const urls = await uploadImage(files, desc, folder);
     for (const room_body of urls) {
       const newRoom = new Room(room_body);
@@ -72,14 +74,35 @@ const postController = {
     let perPage = body.perPage || 10;
     let skipCount = body.skipCount || 0;
 
-    Post.find()
+    if(body){
+    Post.find({},{rooms:0})
       .skip(skipCount)
       .limit(perPage)
+      //.populate({path:"rooms",select:"imgUrl"})
       .exec((err, posts) => {
         Post.countDocuments((err, count) => {
           return res.status(200).json({ Posts: posts, Count: count });
         });
       });
+    } else {
+      Post.find({},{rooms:0})
+      //.populate({path:"rooms",select:"imgUrl"})
+      .exec((err, posts) => {
+        Post.countDocuments((err, count) => {
+          return res.status(200).json({ Posts: posts, Count: count });
+        });
+      });
+    }
+    
+  },
+
+  getPostDetail: async (req, res, next) => {
+    const {postID} = req.params;
+    Post.findById(postID)
+    .populate({path:"rooms",select:"thumbnail name"})
+    .exec((err, post) => {
+      return res.status(200).json({ PostDetail: post});
+    })
   },
 
   updatePost: async (req, res, next) => {

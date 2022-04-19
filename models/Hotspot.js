@@ -19,11 +19,11 @@ const hotspotSchema = new mongoose.Schema({
     },
     currentRoom:{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'rooms' 
+        ref: 'Room' 
     },
     nextRoom:{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'rooms' 
+        ref: 'Room' 
     }
 });
 

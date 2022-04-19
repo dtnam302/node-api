@@ -15,7 +15,7 @@ const uploadImage = async (files, desc, folder) => {
     let org_name = desc[index]; // phong_khach.jpg => phong_khach
     //org_name shoule be phong_khach, phong_ngu v.v.
     let newPath = await uploader(path, org_name);
-    urls.push({ imgUrl: newPath.url, name: org_name });
+    urls.push({ imgUrl: newPath.url, name: org_name ,thumbnail: newPath.url});
   }
   return urls;
 };

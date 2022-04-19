@@ -69,13 +69,16 @@ const postSchema = new mongoose.Schema(
     rooms: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "rooms",
+        ref: "Room",
       },
     ],
     creatorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
+    thumbnail:{
+      type:String,
+    }
   },
   { timestamps: true }
 );

@@ -22,12 +22,15 @@ router.post(
   verifyToken,
   postControllers.createHotspot
 );
-router.post(
+router.put(
   "/uploadthumbnail/:roomID",
   verifyToken,
   postControllers.createThumbnail
 );
 
+
+//GET ALL POST
+router.get("/:postID", postControllers.getPostDetail);
 //GET ALL POST
 router.get("/", postControllers.getAllPosts);
 
