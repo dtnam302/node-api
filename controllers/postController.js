@@ -3,6 +3,7 @@ const Room = require("../models/Room");
 const Hotspot = require("../models/Hotspot");
 const User = require("../models/User");
 const uploadImage = require("../utils/upload");
+const Response = require("../utils/response");
 
 const postController = {
   //CREATE A POST
@@ -20,7 +21,7 @@ const postController = {
       await newPost.save();
       user.posts.push(newPost._id);
       await user.save();
-      return res.status(200).json({ post: newPost });
+      return res.status(200).json({ result: Response(newPost) });
     }
   },
   uploadImage2AnoPost: async (req, res, next) => {
@@ -30,8 +31,6 @@ const postController = {
     const folder = postID;
     const post = await Post.findById(postID);
 
-    console.log(files);
-
     const urls = await uploadImage(files, desc, folder);
     for (const room_body of urls) {
       const newRoom = new Room(room_body);
@@ -40,7 +39,7 @@ const postController = {
       post.rooms.push(newRoom._id);
     }
     await post.save();
-    return res.status(200).json({ post: post });
+    return res.status(200).json({ result: Response(post) });
   },
   createHotspot: async (req, res, next) => {
     const { roomID } = req.params;
@@ -54,17 +53,17 @@ const postController = {
       room.hotspots.push(newHotspot._id);
     }
     await room.save();
-    return res.status(200).json({ room: room });
+    return res.status(200).json({ result: Response(room) });
   },
   createThumbnail: async (req, res, next) => {
     const { roomID } = req.params;
     const room = await Room.findById(roomID);
     const files = req.files;
     const folder = room.postId;
-    const urls = await uploadImage(files, folder);
+    const urls = await uploadImage(files, "", folder);
     room.thumbnail = urls[0].imgUrl;
     await room.save();
-    return res.status(200).json({ room: room });
+    return res.status(200).json({ result: Response(room) });
   },
 
   //GET ALL POSTS
@@ -74,35 +73,30 @@ const postController = {
     let perPage = body.perPage || 10;
     let skipCount = body.skipCount || 0;
 
-    if(body){
-    Post.find({},{rooms:0})
-      .skip(skipCount)
-      .limit(perPage)
-      //.populate({path:"rooms",select:"imgUrl"})
-      .exec((err, posts) => {
-        Post.countDocuments((err, count) => {
-          return res.status(200).json({ Posts: posts, Count: count });
+    if (body) {
+      Post.find({}, { rooms: 0 })
+        .skip(skipCount)
+        .limit(perPage)
+        //.populate({path:"rooms",select:"imgUrl"})
+        .exec((err, posts) => {
+          return res.status(200).json({ result: Response(posts) });
         });
-      });
     } else {
-      Post.find({},{rooms:0})
-      //.populate({path:"rooms",select:"imgUrl"})
-      .exec((err, posts) => {
-        Post.countDocuments((err, count) => {
-          return res.status(200).json({ Posts: posts, Count: count });
+      Post.find({}, { rooms: 0 })
+        //.populate({path:"rooms",select:"imgUrl"})
+        .exec((err, posts) => {
+          return res.status(200).json({ result: Response(posts) });
         });
-      });
     }
-    
   },
 
   getPostDetail: async (req, res, next) => {
-    const {postID} = req.params;
+    const { postID } = req.params;
     Post.findById(postID)
-    .populate({path:"rooms",select:"thumbnail name"})
-    .exec((err, post) => {
-      return res.status(200).json({ PostDetail: post});
-    })
+      .populate({ path: "rooms", select: "thumbnail name" })
+      .exec((err, post) => {
+        return res.status(200).json({ result: Response(post) });
+      });
   },
 
   updatePost: async (req, res, next) => {
@@ -111,9 +105,7 @@ const postController = {
     await Post.updateOne({ _id: postID }, { $set: updateObject })
       .exec()
       .then(() => {
-        res.status(200).json({
-          updatePost: updateObject,
-        });
+        res.status(200).json({ result: Response(updateObject) });
       });
   },
 
@@ -122,9 +114,7 @@ const postController = {
     await Post.updateMany({}, { $set: updateObject })
       .exec()
       .then(() => {
-        res.status(200).json({
-          updatePost: updateObject,
-        });
+        res.status(200).json({ result: Response(updateObject) });
       });
   },
 
