@@ -16,7 +16,10 @@ const roomSchema = new mongoose.Schema({
     type: String,
   },
   thumbnail: {
-    type: String
+    type: [String],
+  },
+  mainThumbnail: {
+    type: String,
   },
   hotspots: [
     {

@@ -27,7 +27,11 @@ router.put(
   verifyToken,
   postControllers.createThumbnail
 );
-
+router.put(
+  "/uploadmainthumbnail/:roomID",
+  verifyToken,
+  postControllers.createMainThumbnail
+);
 
 //GET ALL POST
 router.get("/:postID", postControllers.getPostDetail);

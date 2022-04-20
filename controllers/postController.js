@@ -61,7 +61,21 @@ const postController = {
     const files = req.files;
     const folder = room.postId;
     const urls = await uploadImage(files, "", folder);
-    room.thumbnail = urls[0].imgUrl;
+
+    let thumbnailsUrl = [];
+    for (const url of urls) {
+      thumbnailsUrl.push(url.imgUrl);
+    }
+    room.thumbnail = thumbnailsUrl;
+    await room.save();
+    return res.status(200).json({ result: Response(room) });
+  },
+
+  createMainThumbnail: async (req, res, next) => {
+    const { roomID } = req.params;
+    const room = await Room.findById(roomID);
+    const { mainThumbnail } = req.body;
+    room.mainThumbnail = mainThumbnail;
     await room.save();
     return res.status(200).json({ result: Response(room) });
   },
