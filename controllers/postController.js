@@ -32,6 +32,7 @@ const postController = {
     const post = await Post.findById(postID);
 
     const urls = await uploadImage(files, desc, folder);
+
     for (const room_body of urls) {
       const newRoom = new Room(room_body);
       newRoom.postId = postID;
@@ -83,7 +84,6 @@ const postController = {
   //GET ALL POSTS
   getAllPosts: async (req, res, next) => {
     body = req.body;
-
     let perPage = body.perPage || 10;
     let skipCount = body.skipCount || 0;
 
@@ -111,6 +111,57 @@ const postController = {
       .exec((err, post) => {
         return res.status(200).json({ result: Response(post) });
       });
+  },
+
+  getPostsFilter: async (req, res, next) => {
+    queryString = req.query;
+    //console.log(queryString);
+
+    if (queryString) {
+      //convert from query to filtering object
+      const page = queryString.page * 1 || 1;
+      const limit = queryString.limit * 1 || 10;
+      const skipCount = limit * (page - 1);
+      const sort = queryString.sort || "-createdAt";
+      const queryObj = { ...queryString };
+      const excludedFields = ["page", "sort", "limit", "search"];
+      excludedFields.forEach((el) => delete queryObj[el]);
+
+      let condition = {};
+
+      for (let [key, childObj] of Object.entries(queryObj)) {
+        //console.log(childObj);
+        for (let [k, v] of Object.entries(childObj)) {
+          //console.log(k, v);
+          if (k != "regex") {
+            k = "$" + k;
+            tempObj = {};
+            tempObj[k] = v;
+            condition[key] = tempObj;
+          } else {
+            v = new RegExp(v, "i");
+            condition[key] = v;
+          }
+        }
+      }
+      //console.log(condition);
+      //end of convert
+      Post.find(condition, { rooms: 0 })
+        .skip(skipCount)
+        .limit(limit)
+        .sort(sort)
+        //.populate({path:"rooms",select:"imgUrl"})
+        .exec((err, posts) => {
+          return res.status(200).json({ result: Response(posts) });
+        });
+    } else {
+      Post.find(JSON.parse(condition), { rooms: 0 })
+        .sort(sort)
+        //.populate({path:"rooms",select:"imgUrl"})
+        .exec((err, posts) => {
+          return res.status(200).json({ result: Response(posts) });
+        });
+    }
   },
 
   updatePost: async (req, res, next) => {

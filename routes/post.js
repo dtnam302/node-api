@@ -34,9 +34,10 @@ router.put(
 );
 
 //GET ALL POST
+router.get("/", postControllers.getPostsFilter);
 router.get("/:postID", postControllers.getPostDetail);
 //GET ALL POST
-router.get("/", postControllers.getAllPosts);
+//router.get("/", postControllers.getAllPosts);
 
 //UPDATE A POST
 router.put("/:postID", verifyToken, postControllers.updatePost);
