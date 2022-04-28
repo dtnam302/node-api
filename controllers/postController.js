@@ -155,8 +155,8 @@ const postController = {
           return res.status(200).json({ result: Response(posts) });
         });
     } else {
-      Post.find(JSON.parse(condition), { rooms: 0 })
-        .sort(sort)
+      Post.find({}, { rooms: 0 })
+        //.sort(sort)
         //.populate({path:"rooms",select:"imgUrl"})
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
