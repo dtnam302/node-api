@@ -1,22 +1,23 @@
 const cloudinary = require("../utils/cloudinary");
 
-const uploadImage = async (files, folder) => {
-  const uploader = async (path, originalname) =>
+const uploadImage = async (files, desc, folder) => {
+  const uploader = async (path) =>
     await cloudinary.uploader.upload(path, {
       folder: `Thesis/${folder}`,
-      use_filename: true,
-      public_id: originalname,
+      // use_filename: true,
+      // public_id: originalname,
     });
 
   const urls = [];
 
-  for (const file of files) {
-    const { path, originalname } = file;
-    let org_name = originalname.split(".")[0]; // phong_khach.jpg => phong_khach
+  for (const index in files) {
+    const { path } = files[index];
+    let org_name = desc[index]; // phong_khach.jpg => phong_khach
     //org_name shoule be phong_khach, phong_ngu v.v.
     let newPath = await uploader(path, org_name);
-    urls.push({ imgUrl: newPath.url, name: org_name });
+    urls.push({ imgUrl: newPath.url, name: org_name ,thumbnail: newPath.url});
   }
   return urls;
 };
+
 module.exports = uploadImage;
