@@ -11,12 +11,12 @@ const {
 const postControllers = require("../controllers/postController");
 
 //CREATE A NEW POST
-router.post("/anopost/:userID", verifyToken, postControllers.createAnoPost);
-router.put(
-  "/upload2ano/:postID",
-  verifyToken,
-  postControllers.uploadImage2AnoPost
-);
+router.post("/:userID", verifyToken, postControllers.createPost);
+// router.put(
+//   "/upload2ano/:postID",
+//   verifyToken,
+//   postControllers.uploadImage2AnoPost
+// );
 router.post(
   "/uploadhotspot/:roomID",
   verifyToken,
@@ -60,7 +60,7 @@ router.delete(
 router.delete(
   "/",
   verifyTokenAndUserAuthorization,
-  postControllers.delelePosts
+  postControllers.deletePosts
 );
 
 module.exports = router;

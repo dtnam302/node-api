@@ -6,14 +6,49 @@ const uploadImage = require("../utils/upload");
 const Response = require("../utils/response");
 
 const postController = {
+  // createAnoPost: async (req, res, next) => {
+  //   // Find owner
+  //   const { userID } = req.params;
+  //   body = req.body;
+  //   // if (body.posts == null) {
+  //   //   body.posts = [];
+  //   // }
+  //   const user = await User.findById(userID);
+  //   if (user) {
+  //     const newPost = Post(body);
+  //     newPost.creatorId = userID;
+  //     await newPost.save();
+  //     user.posts.push(newPost._id);
+  //     await user.save();
+  //     return res.status(200).json({ result: Response(newPost) });
+  //   }
+  // },
+  // uploadImage2AnoPost: async (req, res, next) => {
+  //   //refact to roomController
+  //   const { postID } = req.params;
+  //   const files = req.files;
+  //   const desc = req.body.descriptions;
+  //   const folder = postID;
+  //   const post = await Post.findById(postID);
+
+  //   const urls = await uploadImage(files, desc, folder);
+
+  //   for (const room_body of urls) {
+  //     const newRoom = new Room(room_body);
+  //     newRoom.postId = postID;
+  //     await newRoom.save();
+  //     post.rooms.push(newRoom._id);
+  //   }
+  //   await post.save();
+  //   return res.status(200).json({ result: Response(post) });
+  // },
+
   //CREATE A POST
-  createAnoPost: async (req, res, next) => {
-    // Find owner
+  createPost: async (req, res, next) => {
     const { userID } = req.params;
-    body = req.body;
-    // if (body.posts == null) {
-    //   body.posts = [];
-    // }
+    const { image_descriptions, ...body } = req.body;
+    const files = req.files;
+
     const user = await User.findById(userID);
     if (user) {
       const newPost = Post(body);
@@ -21,28 +56,23 @@ const postController = {
       await newPost.save();
       user.posts.push(newPost._id);
       await user.save();
-      return res.status(200).json({ result: Response(newPost) });
-    }
-  },
-  uploadImage2AnoPost: async (req, res, next) => {
-    const { postID } = req.params;
-    const files = req.files;
-    const desc = req.body.descriptions;
-    const folder = postID;
-    const post = await Post.findById(postID);
+      const postID = newPost._id;
+      const folder = postID;
+      const post = await Post.findById(postID);
 
-    const urls = await uploadImage(files, desc, folder);
-
-    for (const room_body of urls) {
-      const newRoom = new Room(room_body);
-      newRoom.postId = postID;
-      await newRoom.save();
-      post.rooms.push(newRoom._id);
+      const urls = await uploadImage(files, image_descriptions, folder);
+      for (const room_body of urls) {
+        const newRoom = new Room(room_body);
+        newRoom.postId = postID;
+        await newRoom.save();
+        post.rooms.push(newRoom._id);
+      }
+      await post.save();
+      return res.status(200).json({ result: Response(post) });
     }
-    await post.save();
-    return res.status(200).json({ result: Response(post) });
   },
   createHotspot: async (req, res, next) => {
+    //refact to hotspotController
     const { roomID } = req.params;
 
     const room = await Room.findById(roomID);
@@ -195,7 +225,7 @@ const postController = {
       });
   },
 
-  delelePosts: async (req, res, next) => {
+  deletePosts: async (req, res, next) => {
     let toDelete = [];
     for (const ele in req.body) {
       toDelete.push(req.body[ele]);
