@@ -99,7 +99,7 @@ const postController = {
     }
     room.thumbnail = thumbnailsUrl;
     await room.save();
-    Room.find({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
+    Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
       return res.status(200).json({ result: Response(room) });
     });
   },
@@ -110,7 +110,7 @@ const postController = {
     const { mainThumbnail } = req.body;
     room.mainThumbnail = mainThumbnail;
     await room.save();
-    Room.find({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
+    Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
       return res.status(200).json({ result: Response(room) });
     });
   },
