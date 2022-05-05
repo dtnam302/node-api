@@ -176,18 +176,18 @@ const postController = {
       }
       //console.log(condition);
       //end of convert
-      Post.find(condition, { rooms: 0 })
+      Post.find(condition)
         .skip(skipCount)
         .limit(limit)
         .sort(sort)
-        //.populate({path:"rooms",select:"imgUrl"})
+        .populate({ path: "rooms", select: "imgUrl" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });
     } else {
-      Post.find({}, { rooms: 0 })
+      Post.find({})
         //.sort(sort)
-        //.populate({path:"rooms",select:"imgUrl"})
+        .populate({ path: "rooms", select: "imgUrl" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });
