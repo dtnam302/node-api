@@ -69,7 +69,7 @@ const postController = {
       }
       await post.save();
       Post.findOne({ _id: postID })
-        .populate({ path: "rooms", select: "name" })
+        .populate({ path: "rooms", select: "name imgUrl" })
         .exec((err, post) => {
           return res.status(200).json({ result: Response(post) });
         });
