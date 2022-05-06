@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 const Room = require("../models/Room");
 const Hotspot = require("../models/Hotspot");
 const User = require("../models/User");
-const uploadImage = require("../utils/upload");
+const { uploadImage, deleteImage } = require("../utils/upload");
 const Response = require("../utils/response");
 
 const postController = {
@@ -96,12 +96,16 @@ const postController = {
     const { roomID } = req.params;
     const room = await Room.findById(roomID);
     const files = req.files;
-    const folder = room.postId;
+    const folder = `${room.postId}/${roomID}`;
     const urls = await uploadImage(files, "", folder);
+    //console.log(folder, urls);
 
     let thumbnailsUrl = [];
     for (const url of urls) {
-      thumbnailsUrl.push(url.imgUrl);
+      thumbnailsUrl.push({
+        thumbnailUrl: url.imgUrl,
+        thumbnailPublicId: url.publicId,
+      });
     }
     room.thumbnail = thumbnailsUrl;
     await room.save();
@@ -113,8 +117,11 @@ const postController = {
   createMainThumbnail: async (req, res, next) => {
     const { roomID } = req.params;
     const room = await Room.findById(roomID);
-    const { mainThumbnail } = req.body;
-    room.mainThumbnail = mainThumbnail;
+    const { mainThumbnailUrl, mainThumbnailPublicId } = req.body;
+    room.mainThumbnail = {
+      mainThumbnailUrl: mainThumbnailUrl,
+      mainThumbnailPublicId: mainThumbnailPublicId,
+    };
     await room.save();
     Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
       return res.status(200).json({ result: Response(room) });
@@ -225,6 +232,11 @@ const postController = {
 
   deletePost: async (req, res, next) => {
     const { postID } = req.params;
+    const post = await Post.findById(postID);
+    for (const room of post.rooms) {
+      //do remove by adding pre(remove)
+      //remove image in cloudinary
+    }
     await Post.deleteOne({ _id: postID })
       .exec()
       .then((deletedCount) => {
