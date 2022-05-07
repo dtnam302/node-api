@@ -68,7 +68,11 @@ const postController = {
         post.rooms.push(newRoom._id);
       }
       await post.save();
-      return res.status(200).json({ result: Response(post) });
+      Post.findOne({ _id: postID })
+        .populate({ path: "rooms", select: "name" })
+        .exec((err, post) => {
+          return res.status(200).json({ result: Response(post) });
+        });
     }
   },
   createHotspot: async (req, res, next) => {
