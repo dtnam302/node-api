@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 const Room = require("../models/Room");
 const Hotspot = require("../models/Hotspot");
 const User = require("../models/User");
-const uploadImage = require("../utils/upload");
+const { uploadImage, deleteImage } = require("../utils/upload");
 
 const roomController = {
   //Update room
@@ -38,6 +38,8 @@ const roomController = {
   //Delete room
   deleteRoom: async (req, res, next) => {
     const { roomID } = req.params;
+    const room = await Room.findById(roomID);
+    await deleteImage(room.publicId);
     await Room.deleteOne({ _id: roomID })
       .exec()
       .then((deletedCount) => {
@@ -50,6 +52,8 @@ const roomController = {
   deleteRooms: async (req, res, next) => {
     let toDelete = [];
     for (const ele in req.body) {
+      const room = await Room.findById(req.body[ele]);
+      await deleteImage(room.publicId);
       toDelete.push(req.body[ele]);
     }
     const filter = { $in: toDelete };

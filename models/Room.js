@@ -12,15 +12,32 @@ const roomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  publicId: {
+    type: String,
+    required: true,
+  },
   removeImgUrl: {
     type: String,
   },
-  thumbnail: {
-    type: [String],
-  },
+  thumbnail: [
+    {
+      thumbnailUrl: {
+        type: String,
+      },
+      thumbnailPublicId: {
+        type: String,
+      },
+    },
+  ],
   mainThumbnail: {
-    type: String,
+    mainThumbnailUrl: {
+      type: String,
+    },
+    mainThumbnailPublicId: {
+      type: String,
+    },
   },
+
   hotspots: [
     {
       type: mongoose.Schema.Types.ObjectId,
