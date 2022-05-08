@@ -14,6 +14,7 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const postRoute = require("./routes/post");
 const roomRoute = require("./routes/room");
+const hotspotRoute = require("./routes/hotspot");
 
 mongooseClient.connect(process.env.MONGODB_URL, () => {
   console.log("CONNECTED TO MONGO DB");
@@ -28,8 +29,10 @@ app.use(upload.array("image"));
 
 //ROUTES
 app.use("/v1/3dview/auth", authRoute);
+app.use("/v1/3dview/user", userRoute);
 app.use("/v1/3dview/post", postRoute);
 app.use("/v1/3dview/room", roomRoute);
+app.use("/v1/3dview/hotspot", hotspotRoute);
 
 //Catch 404 Errors and forward them to error handler
 app.use((req, res, next) => {

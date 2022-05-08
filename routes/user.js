@@ -7,6 +7,8 @@ const {
 
 const router = require("express-promise-router")();
 //GET ALL USERS
+router.get("/:userID", verifyToken, userController.getUserDetail);
+
 router.put(
   "/:userID",
   verifyTokenAndUserAuthorization,

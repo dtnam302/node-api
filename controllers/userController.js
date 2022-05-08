@@ -1,6 +1,15 @@
 const User = require("../models/User");
 
 const userController = {
+  getUserDetail: async (req, res, next) => {
+    const { userID } = req.params;
+    User.findById(userID)
+      //.populate({ path: "rooms", select: "thumbnail name" })
+      .exec((err, user) => {
+        return res.status(200).json({ result: Response(user) });
+      });
+  },
+
   //GET ALL USER
   updateUser: async (req, res, next) => {
     const { userID } = req.params;

@@ -85,7 +85,10 @@ const postController = {
     for (const hotspot of hotspots) {
       const newHotspot = new Hotspot(hotspot);
       await newHotspot.save();
+      let nextRoom = await Room.findById(hotspot.nextRoom);
       room.hotspots.push(newHotspot._id);
+      nextRoom.hotspots.push(newHotspot._id);
+      await nextRoom.save();
     }
     await room.save();
     Room.findOne({ _id: roomID }).exec((err, room) => {
@@ -234,8 +237,9 @@ const postController = {
     const { postID } = req.params;
     const post = await Post.findById(postID);
     for (const room of post.rooms) {
-      //do remove by adding pre(remove)
-      //remove image in cloudinary
+      const room_ele = await Room.findById(room.toString());
+      await deleteImage(room_ele.publicId);
+      await Room.findByIdAndDelete(room.toString());
     }
     await Post.deleteOne({ _id: postID })
       .exec()

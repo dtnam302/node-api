@@ -52,7 +52,7 @@ router.put(
 //DELETE ONE
 router.delete(
   "/:postID",
-  verifyTokenAndUserAuthorization,
+  //verifyTokenAndUserAuthorization,
   postControllers.deletePost
 );
 

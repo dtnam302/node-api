@@ -39,6 +39,13 @@ const roomController = {
   deleteRoom: async (req, res, next) => {
     const { roomID } = req.params;
     const room = await Room.findById(roomID);
+    const post = await Post.findById(room.postId);
+
+    const index = post.rooms.indexOf(room._id);
+    if (index > -1) {
+      post.rooms.splice(index, 1); // 2nd parameter means remove one item only
+    }
+
     await deleteImage(room.publicId);
     await Room.deleteOne({ _id: roomID })
       .exec()

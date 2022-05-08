@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const postSchema = new mongoose.Schema(
   {
     area: {
@@ -76,9 +75,9 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    thumbnail:{
-      type:String,
-    }
+    thumbnail: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
