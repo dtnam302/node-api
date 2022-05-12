@@ -3,7 +3,7 @@ const cloudinary = require("../utils/cloudinary");
 const uploadImage = async (files, desc, folder) => {
   const uploader = async (path) =>
     await cloudinary.uploader.upload(path, {
-      folder: `Test/${folder}`,
+      folder: `Thesis/${folder}`,
       // use_filename: true,
       // public_id: originalname,
     });
