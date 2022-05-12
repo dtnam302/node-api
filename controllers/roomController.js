@@ -3,7 +3,7 @@ const Room = require("../models/Room");
 const Hotspot = require("../models/Hotspot");
 const User = require("../models/User");
 const { uploadImage, deleteImage } = require("../utils/upload");
-
+const Response = require("../utils/response");
 const roomController = {
   //Update room
   updateRoom: async (req, res, next) => {

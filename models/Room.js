@@ -17,7 +17,12 @@ const roomSchema = new mongoose.Schema({
     required: true,
   },
   removeImgUrl: {
-    type: String,
+    removeImgUrl: {
+      type: String,
+    },
+    removeImgPublicId: {
+      type: String,
+    },
   },
   thumbnail: [
     {

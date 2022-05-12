@@ -32,6 +32,11 @@ router.put(
   verifyToken,
   postControllers.createMainThumbnail
 );
+router.put(
+  "/uploadremovedimg/:roomID",
+  verifyToken,
+  postControllers.createRemoveImg
+);
 
 //GET ALL POST
 router.get("/", postControllers.getPostsFilter);

@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const Response = require("../utils/response");
 const userController = {
   getUserDetail: async (req, res, next) => {
     const { userID } = req.params;

@@ -131,6 +131,23 @@ const postController = {
     });
   },
 
+  createRemoveImg: async (req, res, next) => {
+    const { roomID } = req.params;
+    const room = await Room.findById(roomID);
+    const files = req.files;
+    const folder = `${room.postId}/${roomID}`;
+    const urls = await uploadImage(files, "", folder);
+    console.log(room)
+    room.removeImgUrl = {
+      removeImgUrl: urls[0].imgUrl,
+      removeImgPublicId: urls[0].publicId,
+    };
+    await room.save();
+    Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
+      return res.status(200).json({ result: Response(room) });
+    });
+  },
+
   //GET ALL POSTS
   getAllPosts: async (req, res, next) => {
     body = req.body;
