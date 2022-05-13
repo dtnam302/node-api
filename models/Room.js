@@ -35,10 +35,10 @@ const roomSchema = new mongoose.Schema({
     },
   ],
   mainThumbnail: {
-    mainThumbnailUrl: {
+    imgUrl: {
       type: String,
     },
-    mainThumbnailPublicId: {
+    publicId: {
       type: String,
     },
   },

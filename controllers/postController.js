@@ -6,42 +6,7 @@ const { uploadImage, deleteImage } = require("../utils/upload");
 const Response = require("../utils/response");
 
 const postController = {
-  // createAnoPost: async (req, res, next) => {
-  //   // Find owner
-  //   const { userID } = req.params;
-  //   body = req.body;
-  //   // if (body.posts == null) {
-  //   //   body.posts = [];
-  //   // }
-  //   const user = await User.findById(userID);
-  //   if (user) {
-  //     const newPost = Post(body);
-  //     newPost.creatorId = userID;
-  //     await newPost.save();
-  //     user.posts.push(newPost._id);
-  //     await user.save();
-  //     return res.status(200).json({ result: Response(newPost) });
-  //   }
-  // },
-  // uploadImage2AnoPost: async (req, res, next) => {
-  //   //refact to roomController
-  //   const { postID } = req.params;
-  //   const files = req.files;
-  //   const desc = req.body.descriptions;
-  //   const folder = postID;
-  //   const post = await Post.findById(postID);
-
-  //   const urls = await uploadImage(files, desc, folder);
-
-  //   for (const room_body of urls) {
-  //     const newRoom = new Room(room_body);
-  //     newRoom.postId = postID;
-  //     await newRoom.save();
-  //     post.rooms.push(newRoom._id);
-  //   }
-  //   await post.save();
-  //   return res.status(200).json({ result: Response(post) });
-  // },
+  
 
   //CREATE A POST
   createPost: async (req, res, next) => {
@@ -106,11 +71,12 @@ const postController = {
     let thumbnailsUrl = [];
     for (const url of urls) {
       thumbnailsUrl.push({
-        thumbnailUrl: url.imgUrl,
-        thumbnailPublicId: url.publicId,
+        imgUrl: url.imgUrl,
+        publicId: url.publicId,
       });
     }
     room.thumbnail = thumbnailsUrl;
+    room.mainThumbnail = thumbnailsUrl[0];
     await room.save();
     Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
       return res.status(200).json({ result: Response(room) });
@@ -122,8 +88,8 @@ const postController = {
     const room = await Room.findById(roomID);
     const { mainThumbnailUrl, mainThumbnailPublicId } = req.body;
     room.mainThumbnail = {
-      mainThumbnailUrl: mainThumbnailUrl,
-      mainThumbnailPublicId: mainThumbnailPublicId,
+      imgUrl: mainThumbnailUrl,
+      publicId: mainThumbnailPublicId,
     };
     await room.save();
     Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
@@ -139,8 +105,8 @@ const postController = {
     const urls = await uploadImage(files, "", folder);
     console.log(room)
     room.removeImgUrl = {
-      removeImgUrl: urls[0].imgUrl,
-      removeImgPublicId: urls[0].publicId,
+      imgUrl: urls[0].imgUrl,
+      publicId: urls[0].publicId,
     };
     await room.save();
     Room.findOne({ _id: roomID }, { hotspots: 0 }).exec((err, room) => {
