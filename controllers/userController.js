@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Post = require("../models/Post");
 const Response = require("../utils/response");
 const userController = {
   getUserDetail: async (req, res, next) => {
@@ -34,6 +35,29 @@ const userController = {
           message: `${a} user success delete`,
         });
       });
+  },
+
+  //follow post
+  followPost: async (req, res, next) => {
+    const { userID } = req.params;
+    const { postId, isFavorite } = req.body;
+
+    const user = await User.findById(userID);
+    const post = await Post.findById(postId);
+    if (isFavorite) {
+      user.follows.push(postId);
+      post.favoriteCount += 1;
+    } else {
+      const index = user.follows.indexOf(post._id);
+      if (index > -1) {
+        user.follows.splice(index, 1); // 2nd parameter means remove one item only
+        post.favoriteCount -= 1;
+      }
+    }
+    await user.save();
+    await post.save();
+    const operator = isFavorite ? "follow" : "unfollow";
+    return res.status(200).json({ message: `${operator} success` });
   },
 };
 

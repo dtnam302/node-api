@@ -75,8 +75,9 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    thumbnail: {
-      type: String,
+    favoriteCount: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

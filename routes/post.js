@@ -17,7 +17,7 @@ router.post("/:userID", verifyToken, postControllers.createPost);
 //   verifyToken,
 //   postControllers.uploadImage2AnoPost
 // );
-router.post(
+router.put(
   "/uploadhotspot/:roomID",
   verifyToken,
   postControllers.createHotspot

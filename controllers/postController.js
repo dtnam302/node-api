@@ -6,13 +6,14 @@ const { uploadImage, deleteImage } = require("../utils/upload");
 const Response = require("../utils/response");
 
 const postController = {
-  
-
   //CREATE A POST
   createPost: async (req, res, next) => {
     const { userID } = req.params;
-    const { image_descriptions, ...body } = req.body;
+    let { image_descriptions, ...body } = req.body;
     const files = req.files;
+    if (typeof image_descriptions === "string") {
+      image_descriptions = [image_descriptions];
+    }
 
     const user = await User.findById(userID);
     if (user) {
@@ -103,7 +104,7 @@ const postController = {
     const files = req.files;
     const folder = `${room.postId}/${roomID}`;
     const urls = await uploadImage(files, "", folder);
-    console.log(room)
+    console.log(room);
     room.removeImgUrl = {
       imgUrl: urls[0].imgUrl,
       publicId: urls[0].publicId,
@@ -183,14 +184,14 @@ const postController = {
         .skip(skipCount)
         .limit(limit)
         .sort(sort)
-        .populate({ path: "rooms", select: "imgUrl" })
+        .populate({ path: "rooms", select: "imgUrl mainThumbnail" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });
     } else {
       Post.find({})
         //.sort(sort)
-        .populate({ path: "rooms", select: "imgUrl" })
+        .populate({ path: "rooms", select: "imgUrl mainThumbnail" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });

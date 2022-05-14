@@ -14,4 +14,8 @@ router.put("/:userID", verifyToken, userController.updateUser);
 //DELETE USER
 router.delete("/:userID", verifyTokenAndAdmin, userController.deleteUser);
 
+//follow post
+
+router.put("/follow/:userID", verifyToken, userController.followPost);
+
 module.exports = router;
