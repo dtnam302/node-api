@@ -44,7 +44,7 @@ const postController = {
   createHotspot: async (req, res, next) => {
     //refact to hotspotController
     const { roomID } = req.params;
-
+    console.log(roomID);
     const room = await Room.findById(roomID);
     const hotspots = req.body;
 
@@ -57,9 +57,11 @@ const postController = {
       await nextRoom.save();
     }
     await room.save();
-    Room.findOne({ _id: roomID }).exec((err, room) => {
-      return res.status(200).json({ result: Response(room) });
-    });
+    Room.findOne({ _id: roomID })
+      .populate({ path: "hotspots", select: "_id" })
+      .exec((err, room) => {
+        return res.status(200).json({ result: Response(room) });
+      });
   },
   createThumbnail: async (req, res, next) => {
     const { roomID } = req.params;
