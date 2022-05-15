@@ -44,18 +44,15 @@ const postController = {
   createHotspot: async (req, res, next) => {
     //refact to hotspotController
     const { roomID } = req.params;
-    console.log(roomID);
     const room = await Room.findById(roomID);
     const hotspots = req.body;
-
+    let hotspotIds = [];
     for (const hotspot of hotspots) {
       const newHotspot = new Hotspot(hotspot);
       await newHotspot.save();
-      let nextRoom = await Room.findById(hotspot.nextRoom);
-      room.hotspots.push(newHotspot._id);
-      nextRoom.hotspots.push(newHotspot._id);
-      await nextRoom.save();
+      hotspotIds.push(newHotspot._id);
     }
+    room.hotspots = hotspotIds;
     await room.save();
     Room.findOne({ _id: roomID })
       .populate({ path: "hotspots", select: "_id" })
