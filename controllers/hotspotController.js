@@ -57,7 +57,7 @@ const hotspotController = {
       .then((deletedCount) => {
         let a = deletedCount.deletedCount;
         return res.status(200).json({
-          message: `${a} hotspot success delete`,
+          result: { object: "true" },
         });
       });
   },

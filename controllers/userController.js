@@ -19,7 +19,7 @@ const userController = {
       .exec()
       .then(() => {
         res.status(200).json({
-          updateUser: updateObject,
+          result: { object: "true" },
         });
       });
   },
@@ -31,9 +31,7 @@ const userController = {
       .exec()
       .then((deletedCount) => {
         let a = deletedCount.deletedCount;
-        return res.status(200).json({
-          message: `${a} user success delete`,
-        });
+        return res.status(200).json({ result: { object: "true" } });
       });
   },
 
@@ -56,8 +54,7 @@ const userController = {
     }
     await user.save();
     await post.save();
-    const operator = isFavorite ? "follow" : "unfollow";
-    return res.status(200).json({ message: `${operator} success` });
+    return res.status(200).json({ result: { object: "true" } });
   },
 };
 

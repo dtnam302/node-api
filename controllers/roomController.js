@@ -52,7 +52,7 @@ const roomController = {
       .then((deletedCount) => {
         let a = deletedCount.deletedCount;
         return res.status(200).json({
-          message: `${a} room success delete`,
+          result: { object: "true" },
         });
       });
   },

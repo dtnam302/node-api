@@ -232,7 +232,7 @@ const postController = {
       .then((deletedCount) => {
         let a = deletedCount.deletedCount;
         return res.status(200).json({
-          message: `${a} post success delete`,
+          result: { object: "true" },
         });
       });
   },
