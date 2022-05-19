@@ -183,14 +183,14 @@ const postController = {
         .skip(skipCount)
         .limit(limit)
         .sort(sort)
-        .populate({ path: "rooms", select: "imgUrl mainThumbnail" })
+        .populate({ path: "rooms", select: "imgUrl mainThumbnail name" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });
     } else {
       Post.find({})
         //.sort(sort)
-        .populate({ path: "rooms", select: "imgUrl mainThumbnail" })
+        .populate({ path: "rooms", select: "imgUrl mainThumbnail name" })
         .exec((err, posts) => {
           return res.status(200).json({ result: Response(posts) });
         });
