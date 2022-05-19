@@ -27,6 +27,7 @@ const hotspotSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+    default: "",
   },
 });
 

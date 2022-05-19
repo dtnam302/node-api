@@ -11,6 +11,7 @@ const postSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
+      default: "",
     },
     address: {
       type: String,
@@ -23,6 +24,7 @@ const postSchema = new mongoose.Schema(
       },
       name: {
         type: String,
+        default: "",
       },
     },
     district: {
@@ -32,6 +34,7 @@ const postSchema = new mongoose.Schema(
       },
       name: {
         type: String,
+        default: "",
       },
       provinceId: {
         type: Number,
