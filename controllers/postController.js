@@ -104,7 +104,7 @@ const postController = {
     const folder = `${room.postId}/${roomID}`;
     const urls = await uploadImage(files, "", folder);
     console.log(room);
-    room.removeImgUrl = {
+    room.removedImg = {
       imgUrl: urls[0].imgUrl,
       publicId: urls[0].publicId,
     };

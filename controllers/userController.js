@@ -4,7 +4,7 @@ const Response = require("../utils/response");
 const userController = {
   getUserDetail: async (req, res, next) => {
     const { userID } = req.params;
-    User.findById(userID)
+    User.findById(userID, { password: 0 })
       //.populate({ path: "rooms", select: "thumbnail name" })
       .exec((err, user) => {
         return res.status(200).json({ result: Response(user) });
@@ -19,7 +19,7 @@ const userController = {
       .exec()
       .then(() => {
         res.status(200).json({
-          result: { object: "true" },
+          result: { object: updateObject },
         });
       });
   },
@@ -31,7 +31,11 @@ const userController = {
       .exec()
       .then((deletedCount) => {
         let a = deletedCount.deletedCount;
-        return res.status(200).json({ result: { object: "true" } });
+        return res.status(200).json({
+          result: {
+            object: updateObject,
+          },
+        });
       });
   },
 
@@ -54,7 +58,9 @@ const userController = {
     }
     await user.save();
     await post.save();
-    return res.status(200).json({ result: { object: "true" } });
+    return res.status(200).json({
+      result: { object: "true" },
+    });
   },
 };
 
