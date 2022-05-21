@@ -1,6 +1,6 @@
 const Response = (body) => {
   let returnObject = {};
-  if (!body.length) {
+  if (!Array.isArray(body) ) {
     returnObject = {
       object: body,
     };

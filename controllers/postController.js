@@ -170,14 +170,15 @@ const postController = {
             k = "$" + k;
             tempObj = {};
             tempObj[k] = v;
-            condition[key] = tempObj;
+            condition[key] = condition[key] ? {...condition[key], ...tempObj} : tempObj ;
           } else {
             v = new RegExp(v, "i");
             condition[key] = v;
           }
         }
       }
-      //console.log(condition);
+      console.log(condition);
+
       //end of convert
       Post.find(condition)
         .skip(skipCount)
