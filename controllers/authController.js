@@ -6,6 +6,11 @@ const jwt = require("jsonwebtoken");
 const authController = {
   //REGISTER
   registerUser: async (req, res) => {
+    const isExist = await User.findOne({ email: req.body.email });
+    if(isExist) {
+      return res.status(500).json({error: "Email đã được đăng ký!"})
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(req.body.password, salt);
     //Create new user
@@ -35,16 +40,16 @@ const authController = {
 
   //LOGIN
   loginUser: async (req, res) => {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(404).json("Incorrect username");
+      return res.status(404).json({error:"Sai mật khẩu hoặc email"});
     }
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
     if (!validPassword) {
-      return res.status(404).json("Incorrect password");
+      return res.status(404).json({error:"Sai mật khẩu hoặc email"});
     }
     if (user && validPassword) {
       //Generate access token
