@@ -7,8 +7,8 @@ const authController = {
   //REGISTER
   registerUser: async (req, res) => {
     const isExist = await User.findOne({ email: req.body.email });
-    if(isExist) {
-      return res.status(500).json({error: "Email đã được đăng ký!"})
+    if (isExist) {
+      return res.status(500).json({ error: "Email đã được đăng ký!" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -42,14 +42,14 @@ const authController = {
   loginUser: async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(404).json({error:"Sai mật khẩu hoặc email"});
+      return res.status(404).json({ error: "Sai mật khẩu hoặc email" });
     }
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
     if (!validPassword) {
-      return res.status(404).json({error:"Sai mật khẩu hoặc email"});
+      return res.status(404).json({ error: "Sai mật khẩu hoặc email" });
     }
     if (user && validPassword) {
       //Generate access token
@@ -68,7 +68,7 @@ const authController = {
     //Clear cookies when user logs out
     const sessionToken = req.user.sessionToken;
     await Session.findByIdAndDelete(sessionToken);
-    return res.status(200).json("Logged out successfully!");
+    return res.status(200).json("Đăng xuất thành công!");
   },
 
   createSessionToken: async (user) => {

@@ -7,7 +7,9 @@ const {
 
 const router = require("express-promise-router")();
 //GET ALL USERS
+router.get("/", verifyTokenAndAdmin, userController.getAllUsers);
 router.get("/:userID", verifyToken, userController.getUserDetail);
+router.get("/listfollow/:userID", verifyToken, userController.getListFollow);
 
 router.put("/:userID", verifyToken, userController.updateUser);
 

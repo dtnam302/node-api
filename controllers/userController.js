@@ -2,12 +2,41 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Response = require("../utils/response");
 const userController = {
+  getAllUsers: async (req, res, next) => {
+    const { userID } = req.params;
+    User.find({}, { password: 0 })
+      //.populate({ path: "rooms", select: "thumbnail name" })
+      .exec((err, users) => {
+        return res.status(200).json({ result: Response(users) });
+      });
+  },
   getUserDetail: async (req, res, next) => {
     const { userID } = req.params;
     User.findById(userID, { password: 0 })
       //.populate({ path: "rooms", select: "thumbnail name" })
       .exec((err, user) => {
         return res.status(200).json({ result: Response(user) });
+      });
+  },
+  getListFollow: async (req, res, next) => {
+    queryString = req.query;
+    const page = queryString.page * 1 || 1;
+    const limit = queryString.limit * 1 || 10;
+    const skipCount = limit * (page - 1);
+    const sort = queryString.sort || "-createdAt";
+    const { userID } = req.params;
+    const user = await User.findById(userID);
+    const listFollow = user.follows;
+
+    Post.find()
+      .where("_id")
+      .in(listFollow)
+      .skip(skipCount)
+      .limit(limit)
+      .sort(sort)
+      .populate({ path: "rooms", select: "imgUrl mainThumbnail name" })
+      .exec((err, posts) => {
+        return res.status(200).json({ result: Response(posts) });
       });
   },
 
@@ -47,6 +76,16 @@ const userController = {
     const user = await User.findById(userID);
     const post = await Post.findById(postId);
     if (isFavorite) {
+      const index = user.follows.indexOf(post._id);
+      if (index > -1) {
+        return res.status(500).json({
+          result: {
+            object: {
+              message: "Bạn đã follow post này!",
+            },
+          },
+        });
+      }
       user.follows.push(postId);
       post.favoriteCount += 1;
     } else {
@@ -59,7 +98,11 @@ const userController = {
     await user.save();
     await post.save();
     return res.status(200).json({
-      result: { object: "true" },
+      result: {
+        object: {
+          message: "ok!",
+        },
+      },
     });
   },
 };

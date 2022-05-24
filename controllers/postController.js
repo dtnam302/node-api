@@ -140,7 +140,7 @@ const postController = {
   getPostDetail: async (req, res, next) => {
     const { postID } = req.params;
     Post.findById(postID)
-      .populate({ path: "rooms", select: "thumbnail name" })
+      .populate({ path: "rooms", select: "thumbnail name imgUrl" })
       .exec((err, post) => {
         return res.status(200).json({ result: Response(post) });
       });
@@ -170,14 +170,16 @@ const postController = {
             k = "$" + k;
             tempObj = {};
             tempObj[k] = v;
-            condition[key] = condition[key] ? {...condition[key], ...tempObj} : tempObj ;
+            condition[key] = condition[key]
+              ? { ...condition[key], ...tempObj }
+              : tempObj;
           } else {
             v = new RegExp(v, "i");
             condition[key] = v;
           }
         }
       }
-      console.log(condition);
+      //console.log(condition);
 
       //end of convert
       Post.find(condition)
