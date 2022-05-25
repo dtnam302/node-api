@@ -15,7 +15,9 @@ const verifyToken = (req, res, next) => {
           const sessionToken = payload.sessionToken;
           const isSessionValid = await verifySessionToken(sessionToken);
           if (err || !isSessionValid) {
-            return res.status(403).json("Token is not valid!");
+            return res.status(403).json({
+              error: "Token không hợp lệ!",
+            });
           }
           req.user = payload;
           next();
@@ -23,7 +25,9 @@ const verifyToken = (req, res, next) => {
       );
     }
   } else {
-    return res.status(401).json("You're not authenticated");
+    return res.status(401).json({
+      error: "Bạn chưa được xác minh!",
+    });
   }
 };
 
@@ -37,7 +41,9 @@ const verifyTokenAndUserAuthorization = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
-      return res.status(403).json("You're not allowed to do that!");
+      return res.status(403).json({
+        error: "Bạn không thể thực hiện tác vụ này!",
+      });
     }
   });
 };
@@ -47,7 +53,9 @@ const verifyTokenAndAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next();
     } else {
-      return res.status(403).json("You're not allowed to do that!");
+      return res.status(403).json({
+        error: "Bạn không thể thực hiện tác vụ này!",
+      });
     }
   });
 };

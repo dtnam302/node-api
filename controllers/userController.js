@@ -20,17 +20,42 @@ const userController = {
   },
   getListFollow: async (req, res, next) => {
     queryString = req.query;
-    const page = queryString.page * 1 || 1;
-    const limit = queryString.limit * 1 || 10;
-    const skipCount = limit * (page - 1);
-    const sort = queryString.sort || "-createdAt";
     const { userID } = req.params;
     const user = await User.findById(userID);
     const listFollow = user.follows;
 
-    Post.find()
-      .where("_id")
-      .in(listFollow)
+    const page = queryString.page * 1 || 1;
+    const limit = queryString.limit * 1 || 10;
+    const skipCount = limit * (page - 1);
+    const sort = queryString.sort || "-createdAt";
+    const queryObj = { ...queryString };
+    const excludedFields = ["page", "sort", "limit", "search"];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    let condition = {};
+
+    for (let [key, childObj] of Object.entries(queryObj)) {
+      //console.log(childObj);
+      for (let [k, v] of Object.entries(childObj)) {
+        //console.log(k, v);
+        if (k != "regex") {
+          k = "$" + k;
+          tempObj = {};
+          tempObj[k] = v;
+          condition[key] = condition[key]
+            ? { ...condition[key], ...tempObj }
+            : tempObj;
+        } else {
+          v = new RegExp(v, "i");
+          condition[key] = v;
+        }
+      }
+    }
+    let idQueryObj = { _id: { $in: listFollow } };
+    condition = { ...condition, ...idQueryObj };
+    //console.log(condition);
+    //end of convert
+    Post.find(condition)
       .skip(skipCount)
       .limit(limit)
       .sort(sort)
@@ -89,11 +114,7 @@ const userController = {
       const index = user.follows.indexOf(post._id);
       if (index > -1) {
         return res.status(500).json({
-          result: {
-            object: {
-              message: "Bạn đã follow post này!",
-            },
-          },
+          error: "Bạn đã follow post này!",
         });
       }
       user.follows.push(postId);
@@ -110,7 +131,7 @@ const userController = {
     return res.status(200).json({
       result: {
         object: {
-          message: "ok!",
+          message: "ok",
         },
       },
     });

@@ -179,8 +179,6 @@ const postController = {
           }
         }
       }
-      //console.log(condition);
-
       //end of convert
       Post.find(condition)
         .skip(skipCount)
