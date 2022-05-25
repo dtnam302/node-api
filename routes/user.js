@@ -7,11 +7,12 @@ const {
 
 const router = require("express-promise-router")();
 //GET ALL USERS
-router.get("/", verifyTokenAndAdmin, userController.getAllUsers);
-router.get("/:userID", verifyToken, userController.getUserDetail);
-router.get("/listfollow/:userID", verifyToken, userController.getListFollow);
+router.get("/", userController.getAllUsers);
+router.get("/:userID", userController.getUserDetail);
+router.get("/listfollow/:userID", userController.getListFollow);
 
 router.put("/:userID", verifyToken, userController.updateUser);
+router.put("/", verifyTokenAndAdmin, userController.updateUsers);
 
 //DELETE USER
 router.delete("/:userID", verifyTokenAndAdmin, userController.deleteUser);

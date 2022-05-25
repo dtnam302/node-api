@@ -12,11 +12,6 @@ const postControllers = require("../controllers/postController");
 
 //CREATE A NEW POST
 router.post("/:userID", verifyToken, postControllers.createPost);
-// router.put(
-//   "/upload2ano/:postID",
-//   verifyToken,
-//   postControllers.uploadImage2AnoPost
-// );
 router.put(
   "/uploadhotspot/:roomID",
   verifyToken,
@@ -57,7 +52,7 @@ router.put(
 //DELETE ONE
 router.delete(
   "/:postID",
-  //verifyTokenAndUserAuthorization,
+  verifyTokenAndUserAuthorization,
   postControllers.deletePost
 );
 

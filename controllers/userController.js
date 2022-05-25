@@ -52,6 +52,16 @@ const userController = {
         });
       });
   },
+  updateUsers: async (req, res, next) => {
+    const updateObject = req.body;
+    await User.updateMany({}, { $set: updateObject })
+      .exec()
+      .then(() => {
+        res.status(200).json({
+          result: { object: updateObject },
+        });
+      });
+  },
 
   //DELETE A USER
   deleteUser: async (req, res, next) => {
