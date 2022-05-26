@@ -5,6 +5,24 @@ const User = require("../models/User");
 const { uploadImage, deleteImage } = require("../utils/upload");
 const Response = require("../utils/response");
 const roomController = {
+  //add room
+  createRoom: async function (req, res, next) {
+    const { postID } = req.params;
+    let { image_descriptions } = req.body;
+    image_descriptions = [image_descriptions];
+    const files = req.files;
+    const post = await Post.findById(postID);
+    const urls = await uploadImage(files, image_descriptions, postID);
+    const newRoom = new Room(urls[0]);
+    newRoom.postId = postID;
+    await newRoom.save();
+    post.rooms.push(newRoom._id);
+    await post.save();
+    Room.findOne({ _id: newRoom._id }).exec((err, room) => {
+      return res.status(200).json({ result: Response(room) });
+    });
+  },
+
   //Update room
   updateRoom: async (req, res, next) => {
     const { roomID } = req.params;

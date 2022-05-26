@@ -6,6 +6,8 @@ const {
   verifyTokenAndUserAuthorization,
 } = require("../controllers/verifyToken");
 
+router.post("/:postID", verifyToken, roomController.createRoom);
+
 router.put("/:roomID", verifyToken, roomController.updateRoom);
 router.put("/", verifyToken, roomController.updateAllRooms);
 
