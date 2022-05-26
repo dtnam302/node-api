@@ -50,11 +50,7 @@ router.put(
 );
 
 //DELETE ONE
-router.delete(
-  "/:postID",
-  verifyTokenAndUserAuthorization,
-  postControllers.deletePost
-);
+router.delete("/:postID", verifyToken, postControllers.deletePost);
 
 //DELETE MANY
 router.delete(
