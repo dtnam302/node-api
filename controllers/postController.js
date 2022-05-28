@@ -227,7 +227,6 @@ const postController = {
       await Room.findByIdAndDelete(room.toString());
     }
     const user = await User.findById(post.creatorId);
-    console.log(user);
     const index = user.posts.indexOf(postID);
     if (index > -1) {
       user.posts.splice(index, 1); // 2nd parameter means remove one item only
