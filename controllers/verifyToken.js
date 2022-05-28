@@ -5,25 +5,21 @@ const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
     const accessToken = token.split(" ")[1];
-    if (accessToken == "example1") {
-      next();
-    } else {
-      jwt.verify(
-        accessToken,
-        process.env.JWT_ACCESS_KEY,
-        async (err, payload) => {
-          const sessionToken = payload.sessionToken;
-          const isSessionValid = await verifySessionToken(sessionToken);
-          if (err || !isSessionValid) {
-            return res.status(403).json({
-              error: "Token không hợp lệ!",
-            });
-          }
-          req.user = payload;
-          next();
+    jwt.verify(
+      accessToken,
+      process.env.JWT_ACCESS_KEY,
+      async (err, payload) => {
+        const sessionToken = payload.sessionToken;
+        const isSessionValid = await verifySessionToken(sessionToken);
+        if (err || !isSessionValid) {
+          return res.status(403).json({
+            error: "Token không hợp lệ!",
+          });
         }
-      );
-    }
+        req.user = payload;
+        next();
+      }
+    );
   } else {
     return res.status(401).json({
       error: "Bạn chưa được xác minh!",
