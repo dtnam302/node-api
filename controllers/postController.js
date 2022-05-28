@@ -222,8 +222,15 @@ const postController = {
     const post = await Post.findById(postID);
     for (const room of post.rooms) {
       const room_ele = await Room.findById(room.toString());
+      if (!room_ele) break;
       await deleteImage(room_ele.publicId);
       await Room.findByIdAndDelete(room.toString());
+    }
+    const user = await User.findById(post.creatorId);
+    console.log(user);
+    const index = user.posts.indexOf(postID);
+    if (index > -1) {
+      user.posts.splice(index, 1); // 2nd parameter means remove one item only
     }
     await Post.deleteOne({ _id: postID })
       .exec()
