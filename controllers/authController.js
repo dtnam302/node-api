@@ -23,7 +23,13 @@ const authController = {
 
     //Save user to DB
     const user = await newUser.save();
-    return res.status(200).json(user);
+    const sessionToken = await authController.createSessionToken(user);
+    const accessToken = await authController.generateAccessToken(
+      user,
+      sessionToken
+    );
+    const { password, ...others } = user._doc;
+    return res.status(200).json({ ...others, accessToken });
   },
 
   generateAccessToken: async (user, sessionToken) => {
